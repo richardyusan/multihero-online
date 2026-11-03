@@ -14,7 +14,7 @@ set -e
 HERE="$(cd "$(dirname "$0")" && pwd)"
 TARGET="${1:-linux}"
 GAME_DIR="${2:-$HERE/game}"
-VERSION="${VERSION:-1.6.0}"
+VERSION="${VERSION:-1.7.0}"
 EOS_SDK="${EOS_SDK:-$HERE/third_party/eos/SDK}"
 SDL2_MINGW="${SDL2_MINGW:-/opt/sdl2-mingw/SDL2-2.30.9}"
 [ -n "$CODE_ONLY" ] || [ -f "$GAME_DIR/maps.dat" ] || { echo "Game data not found in '$GAME_DIR' (see game/README.md)"; exit 1; }

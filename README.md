@@ -42,14 +42,14 @@ browser version: [richardyusan/multihero-web](https://github.com/richardyusan/mu
 
 - The original game: Adventure mode (50 stages), VS mode, Capture the Flag, CPU opponents, items, unlocks, saves
 - **MULTIPLAYER ONLINE** – real-time online VS matches for up to 4 players through Epic Online Services:
-  room list with ping, create / join, pick your fighter, host chooses lives and stage, READY / START,
-  ping shown during the match. **Plays together with the Android version** (same lobby, same match).
+  room list with ping, create / join, pick your fighter, host chooses lives and stage (picture grid), READY / START,
+  every player's connection light and ping during the match, a notice when someone leaves (the CPU takes over). **Plays together with the Android version** (same lobby, same match).
   No own server and no Epic account needed (anonymous device login).
 - **Up to 4 game pads** (Xbox, PlayStation, generic – anything SDL2 knows): every pad is its own player,
   also in the menus – local VS and Adventure with friends on one PC
 - Keyboard and mouse like the original; touch screens (Windows tablets) get the on-screen controls of the Android version
-- **INFINITE HEALTH** / **INFINITE JUTSU** switches for Adventure mode (main menu, top left – with a touch screen;
-  or in `port_cheats.cfg`), UNLOCK ALL with the game's own cheat (Backspace ×5, Enter in the main menu)
+- **CHEATS** page in the main menu (click with the mouse): **INFINITE HEALTH** / **INFINITE JUTSU** for Adventure
+  mode and **UNLOCK ALL CHARACTERS + MAPS**, each ON/OFF (saved in `port_cheats.cfg`)
 - Sharp scaling to any window size, full screen with **Alt+Enter**, original speed (54 fps game logic)
 - Fixes over the original 0.96 source: enemies that never attacked (Venom on stage 50, Shredder, Thug, Pig)
 
