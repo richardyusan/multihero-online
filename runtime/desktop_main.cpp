@@ -141,7 +141,7 @@ static void pad_dirs(SDL_JoystickID id) {
 static void toggle_fullscreen() {
   bool fs = SDL_GetWindowFlags(g_win) & SDL_WINDOW_FULLSCREEN_DESKTOP;
   SDL_SetWindowFullscreen(g_win, fs ? 0 : SDL_WINDOW_FULLSCREEN_DESKTOP);
-  SDL_ShowCursor(fs ? SDL_ENABLE : SDL_DISABLE);
+  SDL_ShowCursor(SDL_DISABLE);   // the game draws its own pointer (menus), also in a window
 }
 
 static void window_to_screen(int wx, int wy, float &nx, float &ny) {
@@ -368,6 +368,8 @@ int main(int argc, char **argv) {
     return 1;
   }
   SDL_SetWindowMinimumSize(g_win, 640, 480);
+  // no system cursor over the window: the game draws its own pointer, two would be confusing
+  SDL_ShowCursor(SDL_DISABLE);
   g_ren = SDL_CreateRenderer(g_win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
   if (!g_ren) g_ren = SDL_CreateRenderer(g_win, -1, SDL_RENDERER_SOFTWARE | SDL_RENDERER_TARGETTEXTURE);
   if (!g_ren) {

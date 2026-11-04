@@ -14,7 +14,7 @@ set -e
 HERE="$(cd "$(dirname "$0")" && pwd)"
 TARGET="${1:-linux}"
 GAME_DIR="${2:-$HERE/game}"
-VERSION="${VERSION:-1.7.0}"
+VERSION="${VERSION:-1.8.0}"
 EOS_SDK="${EOS_SDK:-$HERE/third_party/eos/SDK}"
 SDL2_MINGW="${SDL2_MINGW:-/opt/sdl2-mingw/SDL2-2.30.9}"
 [ -n "$CODE_ONLY" ] || [ -f "$GAME_DIR/maps.dat" ] || { echo "Game data not found in '$GAME_DIR' (see game/README.md)"; exit 1; }
@@ -76,16 +76,26 @@ else
   RES=""
 fi
 [ -n "$EOS_CFLAGS" ] && echo "   Epic Online Services: on" || echo "   Epic Online Services: off (SDK not found in $EOS_SDK)"
+# TLS (wss://) for the online servers: Mbed TLS, see tools/fetch_mbedtls.py
+TLS_CFLAGS=""; TLS_LIB=""
+if [ "$TARGET" = windows ]; then TCC="x86_64-w64-mingw32-gcc-posix"; TAR="x86_64-w64-mingw32-ar"; else TCC="gcc"; TAR="ar"; fi
+if "$HERE/tools/build_mbedtls.sh" "$HERE/build/tls-$TARGET" "$TCC" "$TAR"; then
+  TLS_CFLAGS="-DMH_WITH_TLS -I$HERE/third_party/mbedtls/include"; TLS_LIB="$HERE/build/tls-$TARGET/libmhtls.a"
+  echo "   online servers (TLS): on"
+else
+  echo "   online servers (TLS): off - run python3 tools/fetch_mbedtls.py"
+fi
+[ "$TARGET" = windows ] && TLS_LIB="$TLS_LIB -lws2_32 -lbcrypt"
 
 echo "== 2. compile ($TARGET)"
 PIDS=""
 for f in "$OBJ/mh.cpp" "$HERE/runtime/bbrt.cpp" "$HERE/runtime/mh_glue.cpp" "$HERE/runtime/desktop_main.cpp" "$HERE"/runtime/net/*.cpp; do
-  $CXX -std=c++17 $CFLAGS $EOS_CFLAGS -c "$f" -o "$OBJ/$(basename "${f%.cpp}").o" & PIDS="$PIDS $!"
+  $CXX -std=c++17 $CFLAGS $EOS_CFLAGS $TLS_CFLAGS -c "$f" -o "$OBJ/$(basename "${f%.cpp}").o" & PIDS="$PIDS $!"
 done
 for p in $PIDS; do wait $p || { echo "compile failed"; exit 1; }; done
 
 echo "== 3. link"
-$CXX -o "$EXE" $(ls "$OBJ"/*.o | grep -v '\.res\.o$') $RES $EOS_LIBS $LIBS
+$CXX -o "$EXE" $(ls "$OBJ"/*.o | grep -v '\.res\.o$') $RES $EOS_LIBS $TLS_LIB $LIBS
 [ "$TARGET" = linux ] && strip "$EXE" || x86_64-w64-mingw32-strip "$EXE" 2>/dev/null || true
 
 if [ -z "$CODE_ONLY" ]; then
@@ -105,7 +115,8 @@ Enter OK, Esc menu. Alt+Enter: full screen. Change keys in Options > Controls.
 Game pads: every pad is its own player (first pad used = player 1, second = player 2 ...).
 A attack, B jump, X special, Y block, LB/RB throw, Start = OK, Back = Esc.
 
-MULTIPLAYER ONLINE plays with Windows, Linux and Android players through Epic Online Services.
+MULTIPLAYER ONLINE: rooms on 4 online servers, together with the web version and Android
+(the "epic online" button in the lobby switches to Epic Online Services).
 Saves and settings: $( [ "$TARGET" = windows ] && echo "%APPDATA%\\MultiHero" || echo "~/.local/share/MultiHero" )
 (create an empty file portable.txt next to the program to keep them in ./save instead)
 EOF

@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.8.0 – 2026-11-04
+- **MULTIPLAYER ONLINE opens the online servers** (Cloudflare Worker, the same rooms as the web version and
+  MultiHero Android 1.8.0): 4 servers (Asia Tenggara, Asia Timur, US, Eropa) with ping and players online, 3 public
+  rooms per server, private rooms with a code, recent rooms. PC, phone and browser players play together.
+- Lobby buttons: **server** (server picker), **epic online** (Epic Online Services lobby; **online servers** switches
+  back), **name**; **enter room code** opens a keypad (typing on the keyboard works too).
+- Fixed: two mouse pointers (the system cursor and the game's own) over the game window. The system cursor is now
+  hidden over the window, also when it is not full screen.
+- New WebSocket + TLS client (`runtime/net/ws_client.cpp`, Mbed TLS 3.6, built-in root certificates).
+
 ## 1.7.0 – 2026-11-04
 - **CHEATS** page in the main menu with ON/OFF items you can click (mouse, keyboard, touch, pads):
   INFINITE HEALTH, INFINITE JUTSU (Adventure mode) and UNLOCK ALL CHARACTERS + MAPS.
